@@ -1,0 +1,123 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    
+    // ========================
+    // Helper Functions
+    // ========================
+    function isLoggedIn() {
+      return request.auth != null;
+    }
+
+    function userExists() {
+      return exists(/databases/$(database)/documents/users/$(request.auth.uid));
+    }
+
+    function getUserData() {
+      return isLoggedIn() ? get(/databases/$(database)/documents/users/$(request.auth.uid)).data : null;
+    }
+
+    function getUserRole() {
+      let userData = getUserData();
+      return userData != null ? userData.role : null;
+    }
+
+    function isAdmin() {
+      return getUserRole() == 'admin';
+    }
+
+    function isManager() {
+      return getUserRole() == 'manager';
+    }
+
+    function isPlayer() {
+      return getUserRole() == 'player';
+    }
+
+    function isTeamMember(teamDoc) {
+      return teamDoc.data.managerId == request.auth.uid || 
+             (teamDoc.data.players != null && teamDoc.data.players.hasAny([request.auth.uid])) ||
+             (teamDoc.data.playerIds != null && teamDoc.data.playerIds[request.auth.uid] == true);
+    }
+
+    function isPublicDocument() {
+      return resource.data.status == 'published' || 
+             resource.data.status == 'approved' ||
+             resource.data.visibility == 'public';
+    }
+
+    function isEmulator() {
+      return request.auth != null && request.auth.token.firebase.sign_in_provider == 'custom';
+    }
+
+    // ========================
+    // Global Rules
+    // ========================
+    // Allow full access during emulation
+    match /{document=**} {
+      allow read, write: if isEmulator();
+    }
+
+    // ========================
+    // Collection Rules
+    // (keep your existing logic)
+    // ========================
+
+    match /users/{userId} {
+      allow create: if request.auth.uid == userId;
+      allow get: if resource.data.keys().hasOnly(['firstName', 'lastName', 'email', 'role', 'teamId']);
+      allow get, update: if isLoggedIn() && request.auth.uid == userId;
+      allow get, update: if isAdmin();
+    }
+
+    match /players/{playerId} {
+      allow get: if true;
+      allow write: if request.auth.uid == playerId || isAdmin();
+    }
+
+    match /teams/{teamId} {
+      allow get: if isPublicDocument();
+      allow get: if isLoggedIn() && isTeamMember(resource);
+      allow list: if isPublicDocument() || 
+                  (isLoggedIn() && (isAdmin() || isTeamMember(resource)));
+      allow create: if isManager() && request.resource.data.managerId == request.auth.uid;
+      allow update: if isLoggedIn() && isTeamMember(resource);
+      allow read, write: if isAdmin();
+    }
+
+    match /teams/{teamId}/players/{playerId} {
+      allow read, write: if isLoggedIn() && isTeamMember(get(/databases/$(database)/documents/teams/$(teamId)));
+    }
+
+    match /events/{eventId} {
+      allow get, list: if isPublicDocument();
+      allow get, list: if isLoggedIn() && isTeamMember(get(/databases/$(database)/documents/teams/$(resource.data.teamId)));
+      allow create: if isLoggedIn() && isTeamMember(get(/databases/$(database)/documents/teams/$(request.resource.data.teamId)));
+      allow read, write: if isAdmin();
+    }
+
+    match /news/{newsId} {
+      allow get, list: if isPublicDocument();
+      allow write: if isAdmin();
+    }
+
+    match /teamRequests/{requestId} {
+      allow create: if isPlayer();
+      allow read: if isLoggedIn() && (
+        resource.data.playerId == request.auth.uid ||
+        isTeamMember(get(/databases/$(database)/documents/teams/$(resource.data.teamId))) ||
+        isAdmin()
+      );
+      allow update: if isLoggedIn() && isTeamMember(get(/databases/$(database)/documents/teams/$(resource.data.teamId)));
+    }
+
+    match /notifications/{notificationId} {
+      allow read: if isLoggedIn() && resource.data.userId == request.auth.uid;
+      allow create: if request.auth.token.firebase.sign_in_provider == 'system' || isAdmin();
+    }
+
+    match /appSettings/{documentId} {
+      allow read, write: if isAdmin();
+    }
+  }
+}

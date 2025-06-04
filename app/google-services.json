@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "294768935182",
+    "project_id": "nhu-connect-418fe",
+    "storage_bucket": "nhu-connect-418fe.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:294768935182:android:9a8b83d9905c4611fe975f",
+        "android_client_info": {
+          "package_name": "com.NamibHockey.NHUConnect"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBVc38MApvSSg4MgpQvxJom9dtCwGujwyI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
