@@ -5,7 +5,7 @@ import { View, StyleSheet, ScrollView, Alert, ActivityIndicator, RefreshControl 
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Button, Card, Title, Paragraph, DataTable, Searchbar } from 'react-native-paper';
 import { collection, query, getDocs, doc, updateDoc, orderBy, startAt, endAt } from 'firebase/firestore';
-import { db } from '../../firebase/firebase.config'; // CORRECTED PATH
+import { db } from '../../firebase/firebase.config'; 
 import { colors } from '../../styles/theme';
 
 export default function ManageTeamsScreen({ navigation }) {
@@ -21,15 +21,14 @@ export default function ManageTeamsScreen({ navigation }) {
 
       // Implement basic search
       if (searchQuery) {
-        // This is a basic prefix search. For more advanced search, consider
-        // client-side filtering or a dedicated search service.
+        
         q = query(q, 
           orderBy("name"), 
           startAt(searchQuery), 
-          endAt(searchQuery + '\uf8ff') // '\uf8ff' is a high Unicode character, ensures prefix match
+          endAt(searchQuery + '\uf8ff') 
         );
       } else {
-        // If no search query, just order by name
+        
         q = query(q, orderBy("name"));
       }
       
@@ -50,7 +49,7 @@ export default function ManageTeamsScreen({ navigation }) {
 
   useEffect(() => {
     fetchTeams();
-  }, [searchQuery]); // Re-fetch when search query changes
+  }, [searchQuery]); 
 
   const onRefresh = () => {
     setRefreshing(true);
@@ -58,7 +57,7 @@ export default function ManageTeamsScreen({ navigation }) {
   };
 
   const handleStatusToggle = async (teamId, currentStatus) => {
-    const newStatus = currentStatus === 'approved' ? 'pending' : 'approved'; // Or 'rejected' for a third option
+    const newStatus = currentStatus === 'approved' ? 'pending' : 'approved'; 
     Alert.alert(
       "Confirm Action",
       `Are you sure you want to change this team's status to '${newStatus}'?`,
@@ -102,7 +101,7 @@ export default function ManageTeamsScreen({ navigation }) {
         >
           {team.status === 'approved' ? 'Set Pending' : 'Approve'}
         </Button>
-        {/* You could add a 'Reject' button or 'View Details' here */}
+        {}
         <Button
           mode="outlined"
           compact
@@ -155,10 +154,10 @@ export default function ManageTeamsScreen({ navigation }) {
                 ))}
 
                 <DataTable.Pagination
-                  page={0} // Example: For a real pagination, this would be dynamic
-                  numberOfPages={1} // Example: totalPages
+                  page={0} 
+                  numberOfPages={1} 
                   onPageChange={(page) => console.log(page)}
-                  label={`${teams.length} of ${teams.length}`} // Example: itemsPerPage * currentPage + 1- totalItems
+                  label={`${teams.length} of ${teams.length}`} 
                   optionsPerPage={[10, 20, 30]}
                   itemsPerPage={10}
                   setItemsPerPage={(itemsPerPage) => console.log(itemsPerPage)}
@@ -173,7 +172,7 @@ export default function ManageTeamsScreen({ navigation }) {
         <Button
           mode="outlined"
           icon="plus-circle"
-          onPress={() => navigation.navigate("RegisterTeam")} // Or a dedicated AdminCreateTeamScreen
+          onPress={() => navigation.navigate("RegisterTeam")}
           style={styles.addTeamButton}
           labelStyle={styles.addTeamButtonText}
         >
@@ -191,7 +190,7 @@ const styles = StyleSheet.create({
   },
   scrollViewContent: {
     padding: 20,
-    paddingBottom: 50, // Give some space at the bottom
+    paddingBottom: 50, 
   },
   headerTitle: {
     fontSize: 28,
@@ -204,7 +203,7 @@ const styles = StyleSheet.create({
   searchBar: {
     marginBottom: 20,
     borderRadius: 8,
-    elevation: 2, // Android shadow
+    elevation: 2, 
   },
   card: {
     width: '100%',

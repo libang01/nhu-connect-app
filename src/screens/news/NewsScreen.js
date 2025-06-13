@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react"
 import { View, StyleSheet, FlatList, Alert, RefreshControl } from "react-native"
-import { Card, Title, Paragraph, FAB, Button } from "react-native-paper" // Using Button from react-native-paper instead
+import { Card, Title, Paragraph, FAB, Button } from "react-native-paper" 
 import { collection, query, getDocs, orderBy } from "firebase/firestore"
 import { db } from "../../firebase/firebase.config"
 import { useAuth } from "../../contexts/AuthContext"

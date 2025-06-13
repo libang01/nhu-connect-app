@@ -10,11 +10,11 @@ import { signOut } from 'firebase/auth';
 import { useAuth } from "../../contexts/AuthContext";
 import { colors } from "../../styles/theme";
 
-// --- NEW TeamItem Component ---
+
 const TeamItem = ({ team, user, playerTeamId, onJoinSuccess }) => {
   const [hasPendingRequest, setHasPendingRequest] = useState(false);
 
-  // Effect to check for pending join requests
+  
   useEffect(() => {
     const checkPendingRequest = async () => {
       if (user && team.id) {
@@ -29,12 +29,12 @@ const TeamItem = ({ team, user, playerTeamId, onJoinSuccess }) => {
           setHasPendingRequest(!querySnapshot.empty);
         } catch (error) {
           console.error("Error checking pending request:", error);
-          // Handle error, e.g., show a small message or log
+          
         }
       }
     };
     checkPendingRequest();
-  }, [user, team.id]); // Dependencies: user and the specific team's ID
+  }, [user, team.id]); 
 
   const handleJoinTeam = async () => {
     Alert.alert(
@@ -52,16 +52,16 @@ const TeamItem = ({ team, user, playerTeamId, onJoinSuccess }) => {
                 playerId: user.uid,
                 playerName: user.displayName || user.email,
                 playerEmail: user.email,
-                managerId: team.managerId || null, // Ensure managerId exists, might be null if not set on team
+                managerId: team.managerId || null, 
                 status: "pending",
                 type: "join",
                 createdAt: new Date(),
               });
               Alert.alert("Request Sent", `Your request to join ${team.name} has been sent for approval.`);
-              setHasPendingRequest(true); // Update UI immediately
-              // Optionally, you might want to refresh the main list or update status
+              setHasPendingRequest(true); 
+              
               if (onJoinSuccess) {
-                onJoinSuccess(); // Callback to trigger a re-fetch in parent component
+                onJoinSuccess(); 
               }
             } catch (error) {
               console.error("Error sending join request:", error);
@@ -109,17 +109,17 @@ const TeamItem = ({ team, user, playerTeamId, onJoinSuccess }) => {
     </Card>
   );
 };
-// --- END NEW TeamItem Component ---
+
 
 
 export default function PlayersScreen({ navigation }) {
   const { user, userRole } = useAuth();
-  const [data, setData] = useState([]); // Will hold either players or teams
+  const [data, setData] = useState([]); 
   const [filteredData, setFilteredData] = useState([]);
   const [loading, setLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState("");
-  const [playerTeamId, setPlayerTeamId] = useState(null); // To store current player's teamId
-  const [currentPlayerData, setCurrentPlayerData] = useState(null); // State for logged-in player's full data
+  const [playerTeamId, setPlayerTeamId] = useState(null); 
+  const [currentPlayerData, setCurrentPlayerData] = useState(null); 
 
   const fetchContent = async () => {
     setLoading(true);
@@ -129,8 +129,7 @@ export default function PlayersScreen({ navigation }) {
         return;
       }
 
-      // 1. Always fetch current player's detailed profile first if it's a player,
-      // as `user.uid` is needed for filtering teams.
+      
       let fetchedUserData = null;
       if (userRole === "player") {
         const currentUserSnap = await getDocs(query(collection(db, "users"), where("__name__", "==", user.uid)));
@@ -156,7 +155,7 @@ export default function PlayersScreen({ navigation }) {
           const teamsSnapshot = await getDocs(teamsQuery);
           const teamsData = teamsSnapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
 
-          // Filter out teams the player might already be part of (though the initial fetch from Firestore should exclude this)
+          
           const availableTeams = teamsData.filter(team => !team.players || !team.players.includes(user.uid));
 
           setData(availableTeams);
@@ -250,7 +249,7 @@ export default function PlayersScreen({ navigation }) {
       ) : (
         <Paragraph>
           {userRole === "player" && playerTeamId
-            ? "" // Handled by Player Profile Card now, but FlatList still needs to be "empty"
+            ? "" 
             : userRole === "player"
             ? "No available teams to join at the moment."
             : "No players found."}
@@ -265,7 +264,7 @@ export default function PlayersScreen({ navigation }) {
       <View style={styles.header}>
         <Title style={styles.headerTitle}>
           {userRole === "player" && playerTeamId
-            ? "My Profile" // Changed title when player is on a team
+            ? "My Profile" 
             : userRole === "player"
             ? "Available Teams"
             : "Players"}
@@ -278,7 +277,7 @@ export default function PlayersScreen({ navigation }) {
         />
       </View>
 
-      {/* Player's Own Profile Card (Visible only for player role and when on a team) */}
+      {}
       {userRole === "player" && currentPlayerData && playerTeamId && (
         <Card style={styles.playerProfileCard}>
           <Card.Content>
@@ -304,7 +303,7 @@ export default function PlayersScreen({ navigation }) {
             )}
             <Button
               mode="outlined"
-              onPress={() => navigation.navigate("EditProfile")} // Assuming you have an 'EditProfile' screen
+              onPress={() => navigation.navigate("EditProfile")} 
               style={styles.editProfileButton}
               textColor={colors.primary}
             >
@@ -314,7 +313,7 @@ export default function PlayersScreen({ navigation }) {
         </Card>
       )}
 
-      {/* Conditionally render FlatList only if player is not on a team OR if it's not a player role */}
+      {}
       {!(userRole === "player" && playerTeamId) && (
         <FlatList
           data={filteredData}
@@ -324,7 +323,7 @@ export default function PlayersScreen({ navigation }) {
                 team={item}
                 user={user}
                 playerTeamId={playerTeamId}
-                onJoinSuccess={fetchContent} // Pass a callback to re-fetch on successful join
+                onJoinSuccess={fetchContent}
               />
             ) : (
               renderPlayer({ item })
@@ -339,7 +338,7 @@ export default function PlayersScreen({ navigation }) {
       )}
 
 
-      {/* Buttons for Player Role (View Events, View News, Logout) */}
+      {}
       {userRole === "player" && (
         <View style={styles.playerActionButtons}>
           <Button
@@ -393,12 +392,12 @@ const styles = StyleSheet.create({
   listContainer: {
     padding: 20,
   },
-  card: { // Unified style for player and team cards
+  card: { 
     marginBottom: 15,
     elevation: 2,
     borderRadius: 8,
   },
-  playerHeader: { // Specific to player cards
+  playerHeader: { 
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
@@ -430,7 +429,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     paddingTop: 50,
   },
-  // Styles for player's own profile card
+  
   playerProfileCard: {
     marginHorizontal: 20,
     marginTop: 10,
@@ -454,7 +453,7 @@ const styles = StyleSheet.create({
     marginTop: 15,
     borderColor: colors.primary,
   },
-  // Styles for player action buttons (View Events, View News, Logout)
+  
   playerActionButtons: {
     flexDirection: 'row',
     justifyContent: 'space-around',

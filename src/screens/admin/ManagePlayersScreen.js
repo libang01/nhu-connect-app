@@ -4,7 +4,7 @@ import React, { useState, useEffect } from "react";
 import { View, StyleSheet, FlatList, ActivityIndicator, Alert } from "react-native";
 import { Text, Card, Title, Paragraph, Portal, Dialog, Button } from "react-native-paper";
 import { collection, query, where, getDocs, getDoc, doc } from "firebase/firestore";
-import { db } from "../../firebase/firebase.config"; // Ensure this path is correct
+import { db } from "../../firebase/firebase.config"; 
 import { colors } from "../../styles/theme";
 
 export default function ManagePlayersScreen() {
@@ -48,25 +48,23 @@ export default function ManagePlayersScreen() {
             id: doc.id,
             fullName: playerData.fullName || `${playerData.firstName} ${playerData.lastName}`,
             email: playerData.email,
-            teamName: teamDetails ? teamDetails.name : "Unassigned", // If teamId is null or invalid
+            teamName: teamDetails ? teamDetails.name : "Unassigned", 
             managerName: managerName,
-            status: playerData.status, // e.g., 'active', 'pending_team_approval'
+            status: playerData.status, 
           };
         });
 
-        // 4. Also include players whose team association is pending approval
-        // This is important because a player can exist but not be on a team yet
+        
         const pendingPlayersQuery = query(collection(db, "users"), where("role", "==", "player"), where("status", "==", "pending_team_approval"));
         const pendingPlayersSnapshot = await getDocs(pendingPlayersQuery);
         
         pendingPlayersSnapshot.docs.forEach(doc => {
           const playerData = doc.data();
-          // Check if this player is already included from the first query (if teamId exists)
+          
           const isAlreadyIncluded = fetchedPlayers.some(p => p.id === doc.id);
 
           if (!isAlreadyIncluded) {
-            // If they are pending team approval but not officially assigned yet
-            // We need to check teamRequests to see which team they are *requesting* to join
+            
             const teamRequestsQuery = query(
               collection(db, "teamRequests"),
               where("playerId", "==", doc.id),
@@ -87,10 +85,10 @@ export default function ManagePlayersScreen() {
                 managerName: "N/A (Pending Approval)",
                 status: playerData.status,
               });
-              setPlayers([...fetchedPlayers]); // Update state incrementally if this takes time
+              setPlayers([...fetchedPlayers]); 
             }).catch(requestError => {
               console.error("Error fetching team request for pending player:", requestError);
-              fetchedPlayers.push({ // Still add the player, but with error info
+              fetchedPlayers.push({ 
                 id: doc.id,
                 fullName: playerData.fullName || `${playerData.firstName} ${playerData.lastName}`,
                 email: playerData.email,
@@ -114,7 +112,7 @@ export default function ManagePlayersScreen() {
     };
 
     fetchPlayersData();
-  }, []); // Empty dependency array means this runs once on mount
+  }, []); 
 
   const renderPlayerCard = ({ item }) => (
     <Card style={styles.card}>

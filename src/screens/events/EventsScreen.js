@@ -4,7 +4,7 @@ import { useState, useEffect } from "react"
 import { View, StyleSheet, FlatList, Alert, RefreshControl } from "react-native"
 import { Card, Title, Paragraph, Button, FAB, Chip } from "react-native-paper"
 import { collection, query, getDocs, orderBy, where } from "firebase/firestore"
-import { db } from "../../firebase/firebase.config" // Corrected path
+import { db } from "../../firebase/firebase.config" 
 import { useAuth } from "../../contexts/AuthContext"
 import { colors } from "../../styles/theme"
 

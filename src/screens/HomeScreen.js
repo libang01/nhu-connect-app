@@ -7,9 +7,9 @@ import { View, StyleSheet, ScrollView, RefreshControl } from "react-native"
 import { Card, Title, Paragraph, Button, FAB } from "react-native-paper"
 import { Ionicons } from "@expo/vector-icons"
 import { collection, query, orderBy, limit, getDocs, where } from "firebase/firestore"
-import { db } from "../firebase/firebase.config" // <--- CORRECTED PATH HERE
-import { useAuth } from "../contexts/AuthContext" // This path is correct from src/screens/
-import { colors } from "../styles/theme" // This path is correct from src/screens/
+import { db } from "../firebase/firebase.config" 
+import { useAuth } from "../contexts/AuthContext" 
+import { colors } from "../styles/theme" 
 
 export default function HomeScreen({ navigation }) {
   const { user, userRole } = useAuth()

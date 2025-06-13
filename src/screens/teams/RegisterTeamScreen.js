@@ -66,7 +66,7 @@ export default function RegisterTeamScreen({ navigation }) {
         [
           { 
             text: "OK", 
-            onPress: () => navigation.replace("Teams") // Use replace instead of navigate
+            onPress: () => navigation.replace("Teams") 
           }
         ]
       )

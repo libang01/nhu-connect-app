@@ -7,9 +7,9 @@ import { View, StyleSheet, ScrollView, Alert } from "react-native"
 import { Card, Title, Paragraph, Button, TextInput, Avatar } from "react-native-paper"
 import { doc, getDoc, updateDoc } from "firebase/firestore"
 import { signOut } from "firebase/auth"
-import { auth, db } from "../firebase/firebase.config" // <--- CORRECTED PATH HERE
-import { useAuth } from "../contexts/AuthContext" // This path is also correct from src/screens/
-import { colors } from "../styles/theme" // This path is also correct from src/screens/
+import { auth, db } from "../firebase/firebase.config"
+import { useAuth } from "../contexts/AuthContext" 
+import { colors } from "../styles/theme" 
 
 export default function ProfileScreen() {
   const { user, userRole } = useAuth()
@@ -21,7 +21,7 @@ export default function ProfileScreen() {
 
   const fetchUserProfile = async () => {
     try {
-      if (!user?.uid) { // Ensure user.uid exists before fetching
+      if (!user?.uid) { 
         setLoading(false);
         return;
       }
@@ -43,12 +43,12 @@ export default function ProfileScreen() {
   }
 
   useEffect(() => {
-    if (user) { // Only fetch if user object is available from AuthContext
+    if (user) { 
       fetchUserProfile()
     } else {
-      setLoading(false); // If no user, stop loading state
+      setLoading(false); 
     }
-  }, [user]) // Re-run when user object changes (e.g., after login/logout)
+  }, [user]) 
 
   const handleSaveProfile = async () => {
     try {
@@ -79,8 +79,6 @@ export default function ProfileScreen() {
   const handleLogout = async () => {
     try {
       await signOut(auth)
-      // Navigation should be handled by AuthContext listener,
-      // which would navigate to Login screen after logout.
     } catch (error) {
       console.error("Error signing out:", error)
       Alert.alert("Error", "Failed to sign out")
@@ -95,12 +93,12 @@ export default function ProfileScreen() {
     )
   }
 
-  // If user is null after loading, means not logged in
+  
   if (!user || !userProfile) {
     return (
       <View style={styles.loadingContainer}>
         <Paragraph>Please log in to view your profile.</Paragraph>
-        {/* You might want to add a button to navigate to login */}
+        
       </View>
     );
   }

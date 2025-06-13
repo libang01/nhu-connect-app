@@ -418,7 +418,7 @@ export default function PlayerManagement({ route, navigation }) {
       </View>
 
       <FlatList
-        data={[1]} // Dummy item for single render
+        data={[1]} 
         renderItem={() => (
           <>
             {renderPendingRequests()}

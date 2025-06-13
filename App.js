@@ -22,15 +22,15 @@ async function fetchUserRoleWithRetry(uid) {
       if (userDoc.exists()) {
         return userDoc.data().role;
       } else {
-        return null; // user doc not found
+        return null; 
       }
     } catch (error) {
-      // Check for offline or unavailable errors and retry
+      
       if (error.code === 'unavailable' || error.message?.toLowerCase().includes('client is offline')) {
         attempts++;
         await new Promise((res) => setTimeout(res, 3000)); // wait 3 seconds before retry
       } else {
-        throw error; // rethrow if it's a different error
+        throw error; 
       }
     }
   }

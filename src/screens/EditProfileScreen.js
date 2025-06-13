@@ -3,11 +3,9 @@ import React, { useState, useEffect } from 'react';
 import { View, StyleSheet, Alert, ScrollView, ActivityIndicator } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Button, TextInput, Title, Text, Card } from 'react-native-paper';
-// CORRECTED PATH for Firebase config
 import { auth, db } from '../firebase/firebase.config'; 
 import { doc, getDoc, updateDoc } from 'firebase/firestore';
 import { updateProfile, updateEmail, reauthenticateWithCredential, EmailAuthProvider } from 'firebase/auth'; 
-// CORRECTED PATH for theme.js
 import { colors } from '../styles/theme'; 
 
 export default function EditProfileScreen({ navigation }) {
@@ -15,13 +13,11 @@ export default function EditProfileScreen({ navigation }) {
   const [isSaving, setIsSaving] = useState(false);
   const [profileData, setProfileData] = useState({
     displayName: '',
-    email: '', // Note: Email changes require re-authentication
+    email: '', 
     phoneNumber: '',
-    // Add other fields you want to allow users to edit
-    // e.g., 'bio', 'profileImageUrl'
   });
-  const [originalEmail, setOriginalEmail] = useState(''); // To check if email changed
-  const [password, setPassword] = useState(''); // For re-authentication if email changes
+  const [originalEmail, setOriginalEmail] = useState('');
+  const [password, setPassword] = useState(''); 
 
   const currentUser = auth.currentUser;
 
@@ -41,17 +37,17 @@ export default function EditProfileScreen({ navigation }) {
           const data = userDocSnap.data();
           setProfileData({
             displayName: data.displayName || '',
-            email: currentUser.email || '', // Get email from auth object directly
+            email: currentUser.email || '', 
             phoneNumber: data.phoneNumber || '',
-            // Populate other fields
+          
           });
-          setOriginalEmail(currentUser.email || ''); // Store original email
+          setOriginalEmail(currentUser.email || ''); 
         } else {
-          // If no Firestore doc, use Auth data
+          
           setProfileData({
             displayName: currentUser.displayName || '',
             email: currentUser.email || '',
-            phoneNumber: '', // No phone number in auth by default
+            phoneNumber: '',
           });
           setOriginalEmail(currentUser.email || '');
           Alert.alert("Info", "No detailed profile found. Using basic user data.");
@@ -65,7 +61,7 @@ export default function EditProfileScreen({ navigation }) {
     };
 
     fetchProfileData();
-  }, [currentUser]); // Dependency array: re-fetch if currentUser changes
+  }, [currentUser]); 
 
   const handleChange = (field, value) => {
     setProfileData(prevData => ({ ...prevData, [field]: value }));
@@ -87,8 +83,7 @@ export default function EditProfileScreen({ navigation }) {
     }
 
     try {
-      // 1. Update Firebase Authentication profile (display name, email)
-      // Display Name update
+      
       if (profileData.displayName !== currentUser.displayName) {
         await updateProfile(currentUser, { displayName: profileData.displayName });
       }
@@ -96,23 +91,22 @@ export default function EditProfileScreen({ navigation }) {
       // Email update (requires re-authentication)
       if (emailChanged) {
         const credential = EmailAuthProvider.credential(originalEmail, password);
-        await reauthenticateWithCredential(currentUser, credential); // Re-authenticate first
-        await updateEmail(currentUser, profileData.email); // Then update email
-        setOriginalEmail(profileData.email); // Update original email state
-        setPassword(''); // Clear password after successful re-auth
+        await reauthenticateWithCredential(currentUser, credential);
+        await updateEmail(currentUser, profileData.email); 
+        setOriginalEmail(profileData.email); 
+        setPassword(''); 
       }
 
-      // 2. Update Firestore document
+      
       const userDocRef = doc(db, "users", currentUser.uid);
       await updateDoc(userDocRef, {
         displayName: profileData.displayName,
         phoneNumber: profileData.phoneNumber,
-        // Add other fields you are saving
         updatedAt: new Date(),
       });
 
       Alert.alert("Success", "Profile updated successfully!");
-      navigation.goBack(); // Go back after successful update
+      navigation.goBack(); 
     } catch (error) {
       console.error("Error saving profile:", error);
       let errorMessage = "Failed to update profile.";
@@ -187,18 +181,7 @@ export default function EditProfileScreen({ navigation }) {
               left={<TextInput.Icon icon="phone" />}
             />
 
-            {/* Add more TextInput components for other profile fields */}
-            {/* Example:
-            <TextInput
-              label="Bio"
-              value={profileData.bio}
-              onChangeText={(text) => handleChange('bio', text)}
-              mode="outlined"
-              style={styles.input}
-              multiline
-              numberOfLines={4}
-            />
-            */}
+      
 
             <Button
               mode="contained"
@@ -220,26 +203,26 @@ export default function EditProfileScreen({ navigation }) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: colors.background, // Use your defined background color
+    backgroundColor: colors.background, 
   },
   scrollViewContent: {
     padding: 20,
-    alignItems: 'center', // Center content horizontally
+    alignItems: 'center', 
   },
   headerTitle: {
     fontSize: 28,
     fontWeight: 'bold',
-    color: colors.primary, // Use your defined primary color
+    color: colors.primary, 
     marginBottom: 25,
     marginTop: 10,
     textAlign: 'center',
   },
   card: {
     width: '100%',
-    maxWidth: 500, // Limit width on larger screens/tablets
+    maxWidth: 500, 
     borderRadius: 10,
-    elevation: 4, // Shadow for Android
-    shadowColor: '#000', // Shadow for iOS
+    elevation: 4, 
+    shadowColor: '#000', 
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.1,
     shadowRadius: 4,
@@ -250,7 +233,7 @@ const styles = StyleSheet.create({
   saveButton: {
     marginTop: 20,
     paddingVertical: 8,
-    backgroundColor: colors.primary, // Use your defined primary color
+    backgroundColor: colors.primary, 
     borderRadius: 8,
   },
   saveButtonText: {

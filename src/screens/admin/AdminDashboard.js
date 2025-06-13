@@ -16,7 +16,7 @@ export default function AdminDashboard({ navigation }) {
     totalEvents: 0,
   });
   const [pendingTeams, setPendingTeams] = useState([]);
-  const [loading, setLoading] = useState(true); // <--- FIXED THIS LINE: Added useState(true)
+  const [loading, setLoading] = useState(true); 
 
   const fetchAdminData = async () => {
     setLoading(true);

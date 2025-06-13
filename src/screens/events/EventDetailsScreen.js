@@ -6,7 +6,7 @@ import { useState, useEffect } from "react"
 import { View, StyleSheet, ScrollView, Alert } from "react-native"
 import { Card, Title, Paragraph, Button } from "react-native-paper"
 import { doc, getDoc } from "firebase/firestore"
-import { db } from "../../firebase/firebase.config" // <--- CORRECTED PATH HERE
+import { db } from "../../firebase/firebase.config" 
 
 export default function EventDetailsScreen({ route, navigation }) {
   const { eventId } = route.params
@@ -20,7 +20,7 @@ export default function EventDetailsScreen({ route, navigation }) {
         setEvent({ id: eventDoc.id, ...eventDoc.data() })
       } else {
         Alert.alert("Error", "Event not found.")
-        navigation.goBack(); // Go back if event not found
+        navigation.goBack(); 
       }
     } catch (error) {
       console.error("Error fetching event details:", error)
@@ -32,22 +32,22 @@ export default function EventDetailsScreen({ route, navigation }) {
 
   useEffect(() => {
     fetchEventDetails()
-  }, [eventId]) // Re-fetch if eventId changes
+  }, [eventId]) 
 
   const formatDate = (date) => {
     if (date?.toDate) {
       return date.toDate().toLocaleDateString()
     }
-    // Fallback for non-Firestore timestamp dates (e.g., if date is a string or JS Date object)
+    
     try {
       const d = new Date(date);
-      if (!isNaN(d.getTime())) { // Check if date is valid
+      if (!isNaN(d.getTime())) { 
         return d.toLocaleDateString();
       }
     } catch (e) {
       console.error("Error parsing date:", e);
     }
-    return 'N/A'; // Default if date cannot be formatted
+    return 'N/A'; 
   }
 
   if (loading) {
@@ -58,7 +58,7 @@ export default function EventDetailsScreen({ route, navigation }) {
     )
   }
 
-  if (!event) { // Handle case where event is null after loading (e.g., event not found)
+  if (!event) { 
     return (
       <View style={styles.loadingContainer}>
         <Paragraph>Event not found.</Paragraph>

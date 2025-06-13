@@ -6,13 +6,9 @@ import { useState } from "react"
 import { View, StyleSheet, ScrollView, Alert } from "react-native"
 import { TextInput, Button, Text, Card, Title } from "react-native-paper"
 import { collection, addDoc } from "firebase/firestore"
-import { db } from "../../firebase/firebase.config" // <--- CORRECTED PATH HERE
-import { useAuth } from "../../contexts/AuthContext" // This path is correct from src/screens/events/
+import { db } from "../../firebase/firebase.config" 
+import { useAuth } from "../../contexts/AuthContext"
 
-// Note: This component doesn't import `colors` from `../../styles/theme`.
-// For consistency, you might consider replacing hardcoded colors in `styles`
-// with values from your `theme` file if you have one.
-// Example: `backgroundColor: colors.background,` instead of `backgroundColor: "#FFFFFF",`
 
 export default function CreateEventScreen({ navigation }) {
   const { user } = useAuth()
@@ -114,16 +110,16 @@ export default function CreateEventScreen({ navigation }) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#FFFFFF", // Consider using colors.background here for consistency
+    backgroundColor: "#FFFFFF", 
   },
   header: {
     padding: 20,
     paddingTop: 60,
-    backgroundColor: "#F5F5F5", // Consider using a color from your theme
+    backgroundColor: "#F5F5F5", 
   },
   headerTitle: {
     marginTop: 10,
-    color: "#1E88E5", // Consider using colors.primary or similar
+    color: "#1E88E5", 
   },
   card: {
     margin: 20,
@@ -134,7 +130,7 @@ const styles = StyleSheet.create({
   },
   note: {
     fontSize: 12,
-    color: "#757575", // Consider using colors.textSecondary or similar
+    color: "#757575", 
     marginBottom: 20,
     fontStyle: "italic",
   },

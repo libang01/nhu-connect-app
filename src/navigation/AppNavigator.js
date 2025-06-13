@@ -105,7 +105,6 @@ function PlayerStackScreens() {
       <Stack.Screen name="PlayerDetails" component={PlayerDetailsScreen} />
       <Stack.Screen name="Profile" component={ProfileScreen} />
       <Stack.Screen name="EditProfile" component={EditProfileScreen} />
-      {/* Also make general screens accessible to players */}
       <Stack.Screen name="Events" component={EventsScreen} />
       <Stack.Screen name="EventDetails" component={EventDetailsScreen} />
       <Stack.Screen name="News" component={NewsScreen} />
@@ -113,26 +112,6 @@ function PlayerStackScreens() {
       <Stack.Screen name="Team" component={TeamScreen} />
       <Stack.Screen name="TeamDetails" component={TeamDetailsScreen} />
       <Stack.Screen name="RegisterTeam" component={RegisterTeamScreen} />
-    </Stack.Navigator>
-  );
-}
-
-// This stack is for users who are not logged in or have an unrecognized role.
-function GuestStackScreens() {
-  return (
-    <Stack.Navigator screenOptions={{ headerShown: false }}>
-      <Stack.Screen name="Home" component={HomeScreen} />
-      {/* All screens that guests can access */}
-      <Stack.Screen name="Events" component={EventsScreen} />
-      <Stack.Screen name="EventDetails" component={EventDetailsScreen} />
-      <Stack.Screen name="News" component={NewsScreen} />
-      <Stack.Screen name="NewsDetails" component={NewsDetailsScreen} />
-      <Stack.Screen name="Team" component={TeamScreen} />
-      <Stack.Screen name="TeamDetails" component={TeamDetailsScreen} />
-      <Stack.Screen name="RegisterTeam" component={RegisterTeamScreen} />
-      {/* Consider if guests should see player lists */}
-      <Stack.Screen name="PlayersScreen" component={PlayersScreen} />
-      <Stack.Screen name="PlayerDetails" component={PlayerDetailsScreen} />
     </Stack.Navigator>
   );
 }
@@ -154,7 +133,7 @@ export default function AppNavigation() {
           setUserRole(role);
         } catch (error) {
           console.error("Error fetching user role:", error);
-          setUserRole('player'); // Default to player if role fetching fails
+          setUserRole('player'); 
         }
       } else {
         setUserRole('guest');
@@ -173,7 +152,7 @@ export default function AppNavigation() {
     );
   }
 
-  // Determine which root stack to show based on user role
+  
   let AppRootNavigator;
   if (user && userRole) {
     if (userRole === 'admin') {
@@ -183,14 +162,14 @@ export default function AppNavigation() {
     } else if (userRole === 'player') {
       AppRootNavigator = PlayerStackScreens;
     } else {
-      AppRootNavigator = GuestStackScreens; // Fallback for unrecognized roles, treat as guest
+      AppRootNavigator = GuestStackScreens; 
     }
   } else {
-    AppRootNavigator = GuestStackScreens; // For guests (unauthenticated)
+    AppRootNavigator = GuestStackScreens; 
   }
 
   return (
-    // Render the determined root navigator directly
+    
     <AppRootNavigator />
   );
 }

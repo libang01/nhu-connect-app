@@ -1,7 +1,6 @@
 import * as Notifications from "expo-notifications"
 import * as Device from "expo-device"
-// FIX: Corrected the import path to firebase.config
-import { projectId } from "../firebase/firebase.config" // <-- FIXED THIS LINE
+import { projectId } from "../firebase/firebase.config" 
 
 Notifications.setNotificationHandler({
   handleNotification: async () => ({

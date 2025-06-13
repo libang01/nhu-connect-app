@@ -4,8 +4,7 @@ import { useState } from "react"
 import { View, StyleSheet, ScrollView, Alert } from "react-native"
 import { TextInput, Button, Text, Card, Title } from "react-native-paper"
 import { signInWithEmailAndPassword } from "firebase/auth"
-// FIX: Corrected the import path to firebase.config
-import { auth } from "../../firebase/firebase.config" // <-- FIXED THIS LINE
+import { auth } from "../../firebase/firebase.config" 
 import { colors } from "../../styles/theme"
 
 export default function LoginScreen({ navigation }) {
